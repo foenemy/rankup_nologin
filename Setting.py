@@ -34,7 +34,9 @@ def setting():
 	options.add_experimental_option('useAutomationExtension', False)
 	# options.add_argument('headless')
 	options.add_extension('./extension_1_1_0_0.crx')
-	options.add_argument('window-size=360,640')
+	# options.add_argument('window-size=360,640')
+	# pc size
+	options.add_argument('window-size=1920,1080')
 	# options.add_argument("disable-gpu")
 	# 혹은 options.add_argument("--disable-gpu")
 	options.add_argument("user-agent="+UA)

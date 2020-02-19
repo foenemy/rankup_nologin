@@ -214,7 +214,7 @@ def searchPlace(target,browser,page=0):
 				print(str(page)+"페이지 "+i_str+"번째")
 				writeHistory(target+" : "+str(page)+"페이지 "+i_str+"번째")
 				time.sleep(4)
-				mouseClickByJS(browser,'document.querySelector(".logo_naver")')
+				# mouseClickByJS(browser,'document.querySelector(".logo_naver")')
 
 			didClick = True
 			break
@@ -271,9 +271,9 @@ def searchPlace(target,browser,page=0):
 
 
 def randomLink(browser):
-
+	
 	keyboard = KeyBoardControl()
-	for i in range(0,5):
+	for i in range(0,2):
 		win32api.keybd_event(keyboard.VK_CODE['spacebar'], 0,0,0)
 		time.sleep(0.3)
 		win32api.keybd_event(keyboard.VK_CODE['spacebar'], 0,win32con.KEYEVENTF_KEYUP,0)
@@ -281,30 +281,74 @@ def randomLink(browser):
 	time.sleep(60)	
 
 	# 모바일인 경우 
-	tagsA = browser.execute_script('var lengthA=document.querySelectorAll("a").length;return lengthA;')
-	# print(tagsA)
-	for i in range(0,tagsA):
-		i_str = str(i)
-		try:
-			href = browser.execute_script('var href=document.querySelectorAll("a")['+i_str+'].getAttribute("href");return href;')
+	if 'm.' in browser.current_url:
+		tagsA = browser.execute_script('var lengthA=document.querySelectorAll("a").length;return lengthA;')
+		# print(tagsA)
+		for i in range(0,tagsA):
+			i_str = str(i)
+			try:
+				href = browser.execute_script('var href=document.querySelectorAll("a")['+i_str+'].getAttribute("href");return href;')
 
-			if 'blog.naver.com' in href:
-				# print(i_str+' / '+href)
-				mouseClickByJS(browser,'document.querySelectorAll("a")['+i_str+']')	
-				break
-		except Exception as e:
-			print("def randomLink")
-			print(e)
-			# capture_exception(e)
-			
+				if 'blog.naver.com' in href:
+					# print(i_str+' / '+href)
+					mouseClickByJS(browser,'document.querySelectorAll("a")['+i_str+']')	
+					break
+			except Exception as e:
+				print("def randomLink")
+				print(e)
+				# capture_exception(e)
+
+	else:
+		# pc의 경우는 최신탭으로 바꿔야 함.
+		browser.switch_to.window(browser.window_handles[-1])	
+		tagsA = browser.execute_script('var lengthA=document.querySelectorAll("a").length;return lengthA;')
+		# print(tagsA)
+		for i in range(0,tagsA):
+			i_str = str(i)
+			try:
+				href = browser.execute_script('var href=document.querySelectorAll("a")['+i_str+'].getAttribute("href");return href;')
+				# mouseClickByJS(browser,'document.querySelectorAll("a")[100]')	
+
+				# if i > 30:
+				# 	print(i_str) 
+				# 	mouseClickByJS(browser,'document.querySelectorAll("a")['+i_str+']')		
+				if 'https://blog.naver.com' in href:
+					# print(i_str+' / '+href)
+					mouseClickByJS(browser,'document.querySelectorAll("a")['+i_str+']')	
+					break
+			except Exception as e:
+				print("def randomLink")
+				print(e)
+				# capture_exception(e)
+
 
 	time.sleep(4)
+	browser.switch_to.window(browser.window_handles[-1])
+	browser.execute_script('document.querySelector("iframe").focus();')
+	time.sleep(2)
 
 	for i in range(0,2):
 		win32api.keybd_event(keyboard.VK_CODE['spacebar'], 0,0,0)
 		time.sleep(0.3)
 		win32api.keybd_event(keyboard.VK_CODE['spacebar'], 0,win32con.KEYEVENTF_KEYUP,0)
-		time.sleep(2)
+		time.sleep(5)
+	
+	browser.close()
+	time.sleep(1)
+	browser.switch_to.window(browser.window_handles[-1])
+	time.sleep(1)
+	randomInt = random.randrange(20,60)
+	mouseClickByJS(browser,'document.querySelectorAll("a")['+str(randomInt)+']')
+	time.sleep(2)
+	browser.close()
+	browser.switch_to.window(browser.window_handles[-1])
+	time.sleep(1)
+	randomInt = random.randrange(20,60)
+	mouseClickByJS(browser,'document.querySelectorAll("a")['+str(randomInt)+']')	
+	time.sleep(2)
+	browser.close()
+	browser.switch_to.window(browser.window_handles[-1])
+	time.sleep(3)
 
 	return browser
 
